@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PlayerScreen extends StatefulWidget {
-  const PlayerScreen({super.key});
+  const PlayerScreen(data, {super.key});
 
   @override
   State<PlayerScreen> createState() => _PlayerScreenState();
