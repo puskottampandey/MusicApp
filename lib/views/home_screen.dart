@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
+
 import 'package:musicapp/constant.dart';
+import 'package:musicapp/controller/contoller.dart';
 import 'package:musicapp/views/musicplayer_screen.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:permission_handler/permission_handler.dart';
+
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,31 +15,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool isplaying = false;
-  final OnAudioQuery onaudioquery = OnAudioQuery();
-  final AudioPlayer audioplayer = AudioPlayer();
-
   @override
   void initState() {
     super.initState();
-    checkPermission();
-  }
-
-  checkPermission() async {
-    final per = Permission.storage.request();
-    if (await per.isGranted) {
-    } else {
-      checkPermission();
-    }
-  }
-
-  playSongs(String? uri) {
-    try {
-      audioplayer.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
-      audioplayer.play();
-    } on Exception catch (e) {
-      e;
-    }
+    final permission = Provider.of<SongsProvider>(context, listen: false);
+    permission.checkPermission();
   }
 
   @override
@@ -81,81 +63,87 @@ class _HomeScreenState extends State<HomeScreen> {
                     ))
               ],
             ),
-            FutureBuilder<List<SongModel>>(
-              future: onaudioquery.querySongs(
-                ignoreCase: true,
-                sortType: null,
-                orderType: OrderType.ASC_OR_SMALLER,
-                uriType: UriType.EXTERNAL,
-              ),
-              builder: (BuildContext context, snapshot) {
-                if (snapshot.data == null) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.data!.isEmpty) {
-                  return const Text("No songs");
-                } else {
-                  return Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: ((context) =>
-                                          PlayerScreen(index))));
+            Consumer<SongsProvider>(
+              builder: ((context, value, child) {
+                return FutureBuilder<List<SongModel>>(
+                  future: value.onaudioquery.querySongs(
+                    ignoreCase: true,
+                    sortType: null,
+                    orderType: OrderType.ASC_OR_SMALLER,
+                    uriType: UriType.EXTERNAL,
+                  ),
+                  builder: (BuildContext context, snapshot) {
+                    if (snapshot.data == null) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.data!.isEmpty) {
+                      return const Text("No songs");
+                    } else {
+                      return Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) {
+                              final data = snapshot.data![index];
+
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: ((context) =>
+                                              PlayerScreen(index))));
+                                },
+                                child: Card(
+                                  margin: const EdgeInsets.only(bottom: 5),
+                                  elevation: 2,
+                                  shadowColor: Colors.blueAccent,
+                                  color: Colors.white,
+                                  child: ListTile(
+                                    leading: CircleAvatar(
+                                      child: QueryArtworkWidget(
+                                          id: data.id, type: ArtworkType.AUDIO),
+                                    ),
+                                    title: Text(
+                                      data.displayNameWOExt,
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    subtitle: Text(
+                                      data.duration.toString(),
+                                      style: const TextStyle(
+                                          fontSize: 16, color: card),
+                                    ),
+                                    trailing: IconButton(
+                                        onPressed: () {
+                                          if (value.audioplayer.playing) {
+                                            value.audioplayer.pause();
+                                          } else {
+                                            value.playSongs(data.uri);
+                                          }
+                                        },
+                                        icon: Icon(
+                                          value.audioplayer.playing
+                                              ? Icons.pause
+                                              : Icons.play_arrow,
+                                          color: card,
+                                        )),
+                                  ),
+                                ),
+                              );
                             },
-                            child: Card(
-                              margin: const EdgeInsets.only(bottom: 5),
-                              elevation: 2,
-                              shadowColor: Colors.blueAccent,
-                              color: Colors.white,
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  child: QueryArtworkWidget(
-                                      id: snapshot.data![index].id,
-                                      type: ArtworkType.AUDIO),
-                                ),
-                                title: Text(
-                                  snapshot.data![index].displayNameWOExt,
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                subtitle: Text(
-                                  snapshot.data![index].duration.toString(),
-                                  style: const TextStyle(
-                                      fontSize: 16, color: card),
-                                ),
-                                trailing: IconButton(
-                                    onPressed: () {
-                                      playSongs(snapshot.data![index].uri);
-                                      setState(() {
-                                        isplaying = !isplaying;
-                                      });
-                                    },
-                                    icon: Icon(
-                                      isplaying
-                                          ? Icons.play_arrow_sharp
-                                          : Icons.play_arrow,
-                                      color: card,
-                                    )),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                }
-              },
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                );
+              }),
             )
           ],
         ),
