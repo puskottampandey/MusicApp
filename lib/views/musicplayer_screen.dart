@@ -42,21 +42,69 @@ class _PlayerScreenState extends State<PlayerScreen> {
               children: [
                 const Text(
                   "Music Name",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const Text(
-                  "Music Name",
+                  "Singer Name",
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "0.0",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Expanded(
+                        child: Slider(
+                          inactiveColor: Colors.black,
+                          thumbColor: Colors.grey,
+                          value: 0,
+                          onChanged: (newvalue) {},
+                        ),
+                      ),
+                      const Text(
+                        "4.0",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 12,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    const Text("0.0"),
-                    Slider(
-                      value: 0,
-                      onChanged: (newvalue) {},
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.queue_play_next,
+                      ),
                     ),
-                    const Text("4.0"),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.pause,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.next_plan,
+                      ),
+                    ),
                   ],
                 )
               ],
