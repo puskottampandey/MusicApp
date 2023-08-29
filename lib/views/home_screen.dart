@@ -25,9 +25,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueAccent,
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.black,
         automaticallyImplyLeading: false,
         title: const Center(
           child: Text(
@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     } else {
                       return Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(2.0),
                           child: ListView.builder(
                             physics: const BouncingScrollPhysics(),
                             itemCount: snapshot.data!.length,
@@ -100,24 +100,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Card(
                                   margin: const EdgeInsets.only(bottom: 5),
                                   elevation: 2,
-                                  shadowColor: Colors.blueAccent,
-                                  color: Colors.white,
+                                  color: Color.fromARGB(255, 27, 27, 27),
                                   child: ListTile(
                                     leading: CircleAvatar(
                                       child: QueryArtworkWidget(
-                                          id: data.id, type: ArtworkType.AUDIO),
+                                        id: data.id,
+                                        type: ArtworkType.AUDIO,
+                                      ),
                                     ),
                                     title: Text(
                                       data.displayNameWOExt,
                                       style: const TextStyle(
-                                          color: Colors.black,
+                                          color: Colors.white,
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500),
                                     ),
                                     subtitle: Text(
                                       data.duration.toString(),
                                       style: const TextStyle(
-                                          fontSize: 16, color: card),
+                                          fontSize: 10, color: card),
                                     ),
                                     trailing: IconButton(
                                       onPressed: () {
@@ -131,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               value.isplaying
                                           ? Icons.pause
                                           : Icons.play_arrow),
-                                      color: card,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),

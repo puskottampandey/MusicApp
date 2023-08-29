@@ -32,7 +32,7 @@ class SongsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void stopMusic(int index) {
+  void stopMusic() {
     audioplayer.pause();
     isplaying = false;
     notifyListeners();
