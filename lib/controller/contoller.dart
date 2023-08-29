@@ -6,9 +6,9 @@ import 'package:permission_handler/permission_handler.dart';
 class SongsProvider extends ChangeNotifier {
   final OnAudioQuery onaudioquery = OnAudioQuery();
   final AudioPlayer audioplayer = AudioPlayer();
+  var playIndex = 0;
+  bool isplaying = false;
 
-  final bool _isplaying = false;
-  bool get isplaying => _isplaying;
   // for checking the permission
   checkPermission() async {
     final per = Permission.storage.request();
@@ -20,13 +20,23 @@ class SongsProvider extends ChangeNotifier {
   }
 
 //for fetching the songs
-  playSongs(String? uri) {
+  playSongs(String? uri, index) {
+    playIndex = index;
     try {
       audioplayer.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
       audioplayer.play();
+      isplaying = true;
     } on Exception catch (e) {
       e;
     }
     notifyListeners();
   }
+
+  void stopMusic(int index) {
+    audioplayer.pause();
+    isplaying = false;
+    notifyListeners();
+  }
+
+  void playingIndex(int index) {}
 }

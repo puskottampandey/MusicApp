@@ -120,19 +120,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                           fontSize: 16, color: card),
                                     ),
                                     trailing: IconButton(
-                                        onPressed: () {
-                                          if (value.audioplayer.playing) {
-                                            value.audioplayer.pause();
-                                          } else {
-                                            value.playSongs(data.uri);
-                                          }
-                                        },
-                                        icon: Icon(
-                                          value.audioplayer.playing
-                                              ? Icons.pause
-                                              : Icons.play_arrow,
-                                          color: card,
-                                        )),
+                                      onPressed: () {
+                                        if (value.isplaying) {
+                                          value.stopMusic();
+                                        } else {
+                                          value.playSongs(data.uri, index);
+                                        }
+                                      },
+                                      icon: Icon(value.playIndex == index &&
+                                              value.isplaying
+                                          ? Icons.pause
+                                          : Icons.play_arrow),
+                                      color: card,
+                                    ),
                                   ),
                                 ),
                               );
