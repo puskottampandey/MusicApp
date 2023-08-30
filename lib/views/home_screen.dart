@@ -95,12 +95,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                       context,
                                       MaterialPageRoute(
                                           builder: ((context) =>
-                                              PlayerScreen(index))));
+                                              PlayerScreen(data: data))));
                                 },
                                 child: Card(
                                   margin: const EdgeInsets.only(bottom: 5),
                                   elevation: 2,
-                                  color: Color.fromARGB(255, 27, 27, 27),
+                                  color: const Color.fromARGB(255, 27, 27, 27),
                                   child: ListTile(
                                     leading: CircleAvatar(
                                       child: QueryArtworkWidget(
