@@ -74,9 +74,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text(
-                              "0.0",
-                              style: TextStyle(
+                            Text(
+                              value.position,
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -84,13 +84,21 @@ class _PlayerScreenState extends State<PlayerScreen> {
                               child: Slider(
                                 inactiveColor: Colors.black,
                                 thumbColor: Colors.white,
-                                value: 0,
-                                onChanged: (newvalue) {},
+                                value: value.value,
+                                min: const Duration(seconds: 0)
+                                    .inSeconds
+                                    .toDouble(),
+                                max: value.max,
+                                onChanged: (newvalue) {
+                                  value.changeDurationtoSeconds(
+                                      newvalue.toInt());
+                                  newvalue = newvalue;
+                                },
                               ),
                             ),
-                            const Text(
-                              "4.0",
-                              style: TextStyle(
+                            Text(
+                              value.duration,
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -104,7 +112,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              value.playSongs(
+                                  widget.data.uri, value.playIndex - 1);
+                            },
                             icon: const Icon(
                               Icons.skip_previous_rounded,
                               color: Colors.black,
@@ -112,15 +123,31 @@ class _PlayerScreenState extends State<PlayerScreen> {
                             ),
                           ),
                           IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.play_arrow_rounded,
-                              color: Colors.black,
-                              size: 40,
-                            ),
-                          ),
+                              onPressed: () {
+                                if (value.isplaying) {
+                                  value.stopMusic();
+                                  value.isplaying = false;
+                                } else {
+                                  value.audioplayer.play();
+                                  value.isplaying = true;
+                                }
+                              },
+                              icon: value.isplaying
+                                  ? const Icon(
+                                      Icons.pause,
+                                      color: Colors.black,
+                                      size: 40,
+                                    )
+                                  : const Icon(
+                                      Icons.play_arrow_rounded,
+                                      color: Colors.black,
+                                      size: 40,
+                                    )),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              value.playSongs(
+                                  widget.data.uri, value.playIndex + 1);
+                            },
                             icon: const Icon(
                               Icons.skip_next_rounded,
                               color: Colors.black,

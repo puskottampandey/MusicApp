@@ -8,7 +8,10 @@ class SongsProvider extends ChangeNotifier {
   final AudioPlayer audioplayer = AudioPlayer();
   var playIndex = 0;
   bool isplaying = false;
-
+  var duration = " ";
+  var position = " ";
+  var max = 0.0;
+  var value = 0.0;
   // for checking the permission
   checkPermission() async {
     final per = Permission.storage.request();
@@ -26,6 +29,7 @@ class SongsProvider extends ChangeNotifier {
       audioplayer.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
       audioplayer.play();
       isplaying = true;
+      updatePosititon();
     } on Exception catch (e) {
       e;
     }
@@ -38,5 +42,19 @@ class SongsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void playingIndex(int index) {}
+  updatePosititon() {
+    audioplayer.durationStream.listen((d) {
+      duration = d.toString().split(".")[0];
+      max = d!.inSeconds.toDouble();
+    });
+    audioplayer.positionStream.listen((p) {
+      position = p.toString().split(".")[0];
+      value = p.inSeconds.toDouble();
+    });
+  }
+
+  changeDurationtoSeconds(seconds) {
+    var duration = Duration(seconds: seconds);
+    audioplayer.seek(duration);
+  }
 }
