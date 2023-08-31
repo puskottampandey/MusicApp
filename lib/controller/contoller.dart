@@ -53,7 +53,7 @@ class SongsProvider extends ChangeNotifier {
     });
   }
 
-  changeDurationtoSeconds(seconds) {
+  changeDurationtoSeconds(seconds, playindex) {
     var duration = Duration(seconds: seconds);
     audioplayer.seek(duration);
   }
