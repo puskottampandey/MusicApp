@@ -57,4 +57,9 @@ class SongsProvider extends ChangeNotifier {
     var duration = Duration(seconds: seconds);
     audioplayer.seek(duration);
   }
+
+  changedValue(newvalue) {
+    value = newvalue;
+    notifyListeners();
+  }
 }

@@ -91,8 +91,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                 max: value.max,
                                 onChanged: (newvalue) {
                                   value.changeDurationtoSeconds(
-                                      newvalue.toInt());
-                                  newvalue = newvalue;
+                                      newvalue.toInt(), value.playIndex);
+                                  value.changedValue(newvalue);
                                 },
                               ),
                             ),
